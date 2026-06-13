@@ -8,7 +8,7 @@ const instance = new StandaloneInstance(
     1,
     2,
     process.env.BOT_TOKEN!,
-    [],
+    ["Guilds"],
     process.execArgv
 )
 
