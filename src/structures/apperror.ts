@@ -16,6 +16,16 @@ const errorMessages = {
         description: "This button does not exist",
     },
     UNKNOWN_MODAL: { title: "Unknown", description: "This modal does not exist" },
+
+    NO_GUILD: {
+        title: "Not in a Guild!",
+        description: "This action can only be performed in a guild.",
+    },
+
+    PERM_ADMINISTRATOR: {
+        title: "Not an Administrator",
+        description: "This action can only be performed as a administrator.",
+    }
 } satisfies Record<string, ErrorMessage>;
 
 export type ErrorCode = keyof typeof errorMessages;
