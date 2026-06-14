@@ -4,12 +4,13 @@
   "description": "Discord Ticket Bot",
   "main": "index.js",
   "scripts": {
-    "dev": "tsx src/index.ts | pino-pretty"
+    "dev": "tsx src/index.ts | pino-pretty",
+    "db:sync": "tsx src/scripts/sync.ts | pino-pretty"
   },
   "keywords": [],
   "author": "kokoio01",
   "license": "MIT",
-  "packageManager": "pnpm@10.33.0",
+  "packageManager": "pnpm@11.6.0",
   "type": "module",
   "dependencies": {
     "@types/node": "^25.9.3",
@@ -17,6 +18,8 @@
     "dotenv": "^17.4.2",
     "galactic.ts": "^2.1.5",
     "pino": "^10.3.1",
+    "sequelize": "^6.37.8",
+    "sqlite3": "^6.0.1",
     "tsx": "^4.22.4"
   },
   "devDependencies": {
