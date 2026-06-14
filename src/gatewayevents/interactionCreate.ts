@@ -1,0 +1,20 @@
+import {GatewayEvent} from "../structures/gatewayevents.js";
+import type {Interaction} from "discord.js";
+import {logger} from "../utils/logger.js";
+
+export default class InteractionCreate extends GatewayEvent {
+    public name: string = "interactionCreate";
+
+    async execute(interaction: Interaction): Promise<void> {
+        try {
+            if (interaction.isChatInputCommand()) {
+                const command = this.client.commands.get(interaction.commandName)
+                if (command) {
+                    await command.execute(interaction)
+                }
+            }
+        } catch (err) {
+            logger.error(err);
+        }
+    }
+}

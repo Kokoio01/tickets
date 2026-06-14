@@ -5,6 +5,7 @@ import {logger} from "./utils/logger.js";
 import {readdirSync} from "node:fs";
 import {join} from "path";
 import type {GatewayEvent} from "./structures/gatewayevents.js";
+import type {SlashCommand} from "./structures/slashcommand.js";
 
 const __dirname = new URL(".", import.meta.url).pathname;
 
@@ -21,20 +22,34 @@ const client = new ExtendedClient(
 cluster.client = client;
 
 client.once( Events.ClientReady, async (readyClient: Client<true>) => {
-    logger.info(`Started cluster ${cluster.clusterID} with shards ${cluster.shardList}`);
+    logger.info(`Starting cluster ${cluster.clusterID} with shards ${cluster.shardList}`);
+
+    const gatewayEventFiles = readdirSync(join(__dirname, "gatewayevents"))
+    for (const file of gatewayEventFiles) {
+        const eventClass = await import(join(__dirname, "gatewayevents", file));
+        const event: GatewayEvent = new eventClass.default(client);
+        client.on(event.name, async (...args) => event.execute(...args))
+    }
+
+    const commandFiles = readdirSync(join(__dirname, "commands"))
+    for (const file of commandFiles) {
+        const commandClass = await import(join(__dirname, "commands", file));
+        const command: SlashCommand = new commandClass.default(client);
+        client.commands.set(command.data.name, command);
+    }
+
+    if (cluster.clusterID === 0) {
+        logger.info(`Syncing ${client.commands.size} commands to Discord...`);
+        await client.application?.commands.set(
+            client.commands.map((cmd) => cmd.data.toJSON()),
+        );
+    }
 
     cluster.triggerReady(readyClient.guilds.cache.size, 0)
 })
 
 cluster.onSelfDestruct = async (): Promise<void> => {
     await client.destroy();
-}
-
-const gatewayEventFiles = readdirSync(join(__dirname, "gatewayevents"))
-for (const file of gatewayEventFiles) {
-    const eventClass = await import(join(__dirname, "gatewayevents", file));
-    const event: GatewayEvent = new eventClass.default(client);
-    client.on(event.name, async (...args) => event.execute(...args))
 }
 
 client.login(cluster.token);
