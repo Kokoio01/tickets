@@ -1,6 +1,7 @@
 import {Sequelize} from "sequelize";
 import {logger} from "../utils/logger.js";
 import Tickets from "./model/tickets.js";
+import Settings from "./model/settings.js";
 
 
 const sequelize = new Sequelize({
@@ -10,9 +11,11 @@ const sequelize = new Sequelize({
 })
 
 const tickets = Tickets(sequelize);
+const settings = Settings(sequelize);
 
 export {
     sequelize,
     tickets,
+    settings,
 }
 
