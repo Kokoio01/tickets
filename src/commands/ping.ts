@@ -1,4 +1,10 @@
-import {type ChatInputCommandInteraction, SlashCommandBuilder, MessageFlags} from "discord.js";
+import {
+    ButtonBuilder,
+    type ChatInputCommandInteraction,
+    SlashCommandBuilder,
+    MessageFlags,
+    ButtonStyle,
+    ActionRowBuilder} from "discord.js";
 import {SlashCommand} from "../structures/slashcommand.js";
 
 export default class PingCommand extends SlashCommand {
@@ -11,6 +17,12 @@ export default class PingCommand extends SlashCommand {
     }
 
     async execute(interaction: ChatInputCommandInteraction): Promise<void> {
-        await interaction.reply({content: "Pong!", flags: MessageFlags.Ephemeral});
+        const row = new ActionRowBuilder<ButtonBuilder>({
+            components: [
+                new ButtonBuilder().setLabel("Test").setCustomId("test").setStyle(ButtonStyle.Secondary),
+            ]
+        })
+
+        await interaction.reply({content: "Pong!", components: [row], flags: MessageFlags.Ephemeral});
     }
 }

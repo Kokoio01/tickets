@@ -13,6 +13,14 @@ export default class InteractionCreate extends GatewayEvent {
                     await command.execute(interaction)
                 }
             }
+
+            if (interaction.isButton()) {
+                const componentName = interaction.customId.split(":")[0] || "ERR_BUTTON_NOT_FOUND";
+                const button = this.client.buttons.get(componentName)
+                if (button) {
+                    await button.execute(interaction)
+                }
+            }
         } catch (err) {
             logger.error(err);
         }

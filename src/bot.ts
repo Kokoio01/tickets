@@ -6,6 +6,7 @@ import {readdirSync} from "node:fs";
 import {join} from "path";
 import type {GatewayEvent} from "./structures/gatewayevents.js";
 import type {SlashCommand} from "./structures/slashcommand.js";
+import type {ButtonHandler} from "./structures/buttonhandler.js";
 
 const __dirname = new URL(".", import.meta.url).pathname;
 
@@ -36,6 +37,13 @@ client.once( Events.ClientReady, async (readyClient: Client<true>) => {
         const commandClass = await import(join(__dirname, "commands", file));
         const command: SlashCommand = new commandClass.default(client);
         client.commands.set(command.data.name, command);
+    }
+
+    const buttonFiles = readdirSync(join(__dirname, "buttons"))
+    for (const file of buttonFiles) {
+        const buttonClass = await import(join(__dirname, "buttons", file));
+        const button: ButtonHandler = new buttonClass.default();
+        client.buttons.set(button.name, button);
     }
 
     if (cluster.clusterID === 0) {
