@@ -7,6 +7,7 @@ import {join} from "path";
 import type {GatewayEvent} from "./structures/gatewayevents.js";
 import type {SlashCommand} from "./structures/slashcommand.js";
 import type {ButtonHandler} from "./structures/buttonhandler.js";
+import type {ModalHandler} from "./structures/modalhandler.js";
 
 const __dirname = new URL(".", import.meta.url).pathname;
 
@@ -44,6 +45,13 @@ client.once( Events.ClientReady, async (readyClient: Client<true>) => {
         const buttonClass = await import(join(__dirname, "buttons", file));
         const button: ButtonHandler = new buttonClass.default();
         client.buttons.set(button.name, button);
+    }
+
+    const modalFiles = readdirSync(join(__dirname, "modals"))
+    for (const file of modalFiles) {
+        const modalClass = await import(join(__dirname, "modals", file));
+        const modal: ModalHandler = new modalClass.default();
+        client.modals.set(modal.name, modal);
     }
 
     if (cluster.clusterID === 0) {

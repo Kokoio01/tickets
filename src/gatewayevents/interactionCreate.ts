@@ -21,6 +21,14 @@ export default class InteractionCreate extends GatewayEvent {
                     await button.execute(interaction)
                 }
             }
+
+            if (interaction.isModalSubmit()) {
+                const componentName = interaction.customId.split(":")[0] || "ERR_MODAL_NOT_FOUND";
+                const modal = this.client.modals.get(componentName)
+                if (modal) {
+                    await modal.execute(interaction)
+                }
+            }
         } catch (err) {
             logger.error(err);
         }

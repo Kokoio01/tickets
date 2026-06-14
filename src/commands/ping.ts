@@ -20,6 +20,7 @@ export default class PingCommand extends SlashCommand {
         const row = new ActionRowBuilder<ButtonBuilder>({
             components: [
                 new ButtonBuilder().setLabel("Test").setCustomId("test").setStyle(ButtonStyle.Secondary),
+                new ButtonBuilder().setLabel("Test").setCustomId("test:modal").setStyle(ButtonStyle.Secondary),
             ]
         })
 
