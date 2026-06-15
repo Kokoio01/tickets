@@ -22,6 +22,11 @@ const errorMessages = {
         description: "This action can only be performed in a guild.",
     },
 
+    DB_ERROR: {
+        title: "Database Error",
+        description: "An error has occurred while querying the database.",
+    },
+
     PERM_ADMINISTRATOR: {
         title: "Not an Administrator",
         description: "This action can only be performed as a administrator.",

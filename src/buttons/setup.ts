@@ -8,6 +8,7 @@ import {
     settingsWelcomeModal
 } from "../messages/settings.js";
 import {AppError} from "../structures/apperror.js";
+import {settings} from "../db/index.js";
 
 export default class SetupButton extends ButtonHandler {
     public name: string = "setup";
@@ -16,22 +17,43 @@ export default class SetupButton extends ButtonHandler {
         checkGuild(interaction);
         if (!checkAdministrator(interaction)) return;
         const action = interaction.customId.split(":")[1]
+        const settingsData = await settings.findOne({where: {guildId: interaction.guild?.id}});
 
         switch (action) {
             case "ticket": {
-                await interaction.showModal(settingsTicketModal());
+                await interaction.showModal(settingsTicketModal(
+                    settingsData?.categoryId,
+                    settingsData?.staffRoleId,
+                    settingsData?.logChannelId,
+                    settingsData?.maxTicketsPerUser
+                ));
                 return;
             }
             case "open": {
-                await interaction.showModal(settingsOpenModal());
+                await interaction.showModal(settingsOpenModal(
+                    settingsData?.closingReasonRequired,
+                    settingsData?.openingReasonRequired,
+                    settingsData?.userCloseAllowed,
+                    settingsData?.pingOnOpen
+                ));
                 return;
             }
             case "panel": {
-                await interaction.showModal(settingsPanelModal())
+                await interaction.showModal(settingsPanelModal(
+                    settingsData?.panelTitle,
+                    settingsData?.panelDescription,
+                    settingsData?.panelImageUrl,
+                    settingsData?.panelThumbnailUrl,
+                ))
                 return;
             }
             case "welcome": {
-                await interaction.showModal(settingsWelcomeModal());
+                await interaction.showModal(settingsWelcomeModal(
+                    settingsData?.welcomeTitle,
+                    settingsData?.welcomeDescription,
+                    settingsData?.welcomeImageUrl,
+                    settingsData?.welcomeThumbnailUrl,
+                ));
                 return;
             }
             default: {

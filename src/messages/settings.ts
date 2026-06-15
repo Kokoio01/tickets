@@ -48,7 +48,12 @@ export function settingsMenu(): InteractionReplyOptions {
     }
 }
 
-export function settingsTicketModal(): ModalBuilder {
+export function settingsTicketModal(
+    ticketCategory?: string,
+    staffRole?: string,
+    logChannel?: string,
+    ticketPerUser?: number,
+): ModalBuilder {
     return new ModalBuilder()
         .setCustomId("setup:ticket")
         .setTitle("Ticket Settings")
@@ -62,6 +67,7 @@ export function settingsTicketModal(): ModalBuilder {
                         .setChannelTypes(ChannelType.GuildCategory)
                         .setMaxValues(1)
                         .setRequired(true)
+                        .setDefaultChannels(ticketCategory ? [ticketCategory] : [])
                 )
         )
         .addLabelComponents(
@@ -73,6 +79,7 @@ export function settingsTicketModal(): ModalBuilder {
                         .setCustomId("setup:modal:staff")
                         .setMaxValues(1)
                         .setRequired(true)
+                        .setDefaultRoles(staffRole ? [staffRole] : [])
                 )
         )
         .addLabelComponents(
@@ -85,6 +92,7 @@ export function settingsTicketModal(): ModalBuilder {
                         .setChannelTypes(ChannelType.GuildText)
                         .setMaxValues(1)
                         .setRequired(true)
+                        .setDefaultChannels(logChannel ? [logChannel] : [])
                 )
         )
         .addLabelComponents(
@@ -96,11 +104,17 @@ export function settingsTicketModal(): ModalBuilder {
                         .setCustomId("setup:modal:ticketsuser")
                         .setStyle(TextInputStyle.Short)
                         .setRequired(true)
+                        .setValue(String(ticketPerUser))
                 )
         )
 }
 
-export function settingsOpenModal(): ModalBuilder {
+export function settingsOpenModal(
+    closingReasonRequired: boolean = false,
+    openReasonRequired: boolean = false,
+    userCloseAllowed: boolean = false,
+    pingStaffOnOpen: boolean = false,
+): ModalBuilder {
     return new ModalBuilder()
         .setCustomId("setup:open")
         .setTitle("Open/Close Settings")
@@ -111,9 +125,10 @@ export function settingsOpenModal(): ModalBuilder {
                 .setCheckboxGroupComponent(
                     new CheckboxGroupBuilder()
                         .setCustomId("setup:check:reasons")
+                        .setRequired(false)
                         .addOptions([
-                            {label: "Opening Reason required", description: "Does a User need to enter a reason to open a ticket", value: "open"},
-                            {label: "Close Reason required", description: "Does a User/Staff need to enter a reason to close a ticket", value: "close"}
+                            {label: "Opening Reason required", description: "Does a User need to enter a reason to open a ticket", value: "open", default: openReasonRequired},
+                            {label: "Close Reason required", description: "Does a User/Staff need to enter a reason to close a ticket", value: "close", default: closingReasonRequired}
                         ])
                 )
         )
@@ -124,8 +139,9 @@ export function settingsOpenModal(): ModalBuilder {
                 .setCheckboxGroupComponent(
                     new CheckboxGroupBuilder()
                         .setCustomId("setup:check:userclose")
+                        .setRequired(false)
                         .addOptions([
-                            {label: "Allow User Close", description: "Allow Users to close their tickets themself", value: "allow"}
+                            {label: "Allow User Close", description: "Allow Users to close their tickets themself", value: "allow", default: userCloseAllowed}
                         ])
                 )
         )
@@ -136,14 +152,20 @@ export function settingsOpenModal(): ModalBuilder {
                 .setCheckboxGroupComponent(
                     new CheckboxGroupBuilder()
                         .setCustomId("setup:check:ping")
+                        .setRequired(false)
                         .addOptions([
-                            {label: "Ping Staff", description: "Ping your Staff when a new Ticket is opened", value: "ping"}
+                            {label: "Ping Staff", description: "Ping your Staff when a new Ticket is opened", value: "ping", default: pingStaffOnOpen}
                         ])
                 )
         )
 }
 
-export function settingsPanelModal(): ModalBuilder {
+export function settingsPanelModal(
+    title: string = "",
+    description: string = "",
+    imageUrl: string = "",
+    thumbnailUrl: string = "",
+): ModalBuilder {
     return new ModalBuilder()
         .setCustomId("setup:panel")
         .setTitle("Panel Settings")
@@ -156,6 +178,7 @@ export function settingsPanelModal(): ModalBuilder {
                         .setStyle(TextInputStyle.Short)
                         .setMaxLength(256)
                         .setRequired(true)
+                        .setValue(title)
                 )
         )
         .addLabelComponents(
@@ -167,6 +190,7 @@ export function settingsPanelModal(): ModalBuilder {
                         .setStyle(TextInputStyle.Paragraph)
                         .setMaxLength(4000)
                         .setRequired(true)
+                        .setValue(description)
                 )
         )
         .addLabelComponents(
@@ -178,6 +202,7 @@ export function settingsPanelModal(): ModalBuilder {
                         .setStyle(TextInputStyle.Short)
                         .setMaxLength(2048)
                         .setRequired(false)
+                        .setValue(imageUrl)
                 )
         )
         .addLabelComponents(
@@ -189,11 +214,17 @@ export function settingsPanelModal(): ModalBuilder {
                         .setStyle(TextInputStyle.Short)
                         .setMaxLength(2048)
                         .setRequired(false)
+                        .setValue(thumbnailUrl)
                 )
         )
 }
 
-export function settingsWelcomeModal(): ModalBuilder {
+export function settingsWelcomeModal(
+    title: string = "",
+    description: string = "",
+    imageUrl: string = "",
+    thumbnailUrl: string = "",
+): ModalBuilder {
     return new ModalBuilder()
         .setCustomId("setup:welcome")
         .setTitle("Welcome Settings")
@@ -206,6 +237,7 @@ export function settingsWelcomeModal(): ModalBuilder {
                         .setStyle(TextInputStyle.Short)
                         .setMaxLength(256)
                         .setRequired(true)
+                        .setValue(title)
                 )
         )
         .addLabelComponents(
@@ -217,6 +249,7 @@ export function settingsWelcomeModal(): ModalBuilder {
                         .setStyle(TextInputStyle.Paragraph)
                         .setMaxLength(4000)
                         .setRequired(true)
+                        .setValue(description)
                 )
         )
         .addLabelComponents(
@@ -228,6 +261,7 @@ export function settingsWelcomeModal(): ModalBuilder {
                         .setStyle(TextInputStyle.Short)
                         .setMaxLength(2048)
                         .setRequired(false)
+                        .setValue(imageUrl)
                 )
         )
         .addLabelComponents(
@@ -239,6 +273,7 @@ export function settingsWelcomeModal(): ModalBuilder {
                         .setStyle(TextInputStyle.Short)
                         .setMaxLength(2048)
                         .setRequired(false)
+                        .setValue(thumbnailUrl)
                 )
         )
 }

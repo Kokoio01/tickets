@@ -1,7 +1,31 @@
-import {DataTypes, type Sequelize} from "sequelize";
+import {DataTypes, Model, type Sequelize} from "sequelize";
+
+export class Settings extends Model {
+    declare readonly guildId: string;
+
+    declare staffRoleId: string;
+    declare logChannelId: string;
+    declare categoryId: string;
+
+    declare maxTicketsPerUser: number;
+    declare openingReasonRequired: boolean;
+    declare closingReasonRequired: boolean;
+    declare userCloseAllowed: boolean;
+    declare pingOnOpen: boolean;
+
+    declare panelTitle: string;
+    declare panelDescription: string;
+    declare panelImageUrl: string;
+    declare panelThumbnailUrl: string;
+
+    declare welcomeTitle: string;
+    declare welcomeDescription: string;
+    declare welcomeImageUrl: string;
+    declare welcomeThumbnailUrl: string;
+}
 
 export default (sequelize: Sequelize) => {
-    return sequelize.define("settings", {
+    return Settings.init({
         guildId: {
             type: DataTypes.STRING,
             primaryKey: true,
@@ -81,5 +105,8 @@ export default (sequelize: Sequelize) => {
             type: DataTypes.STRING(2048),
             allowNull: true
         }
+    }, {
+        sequelize,
+        modelName: "settings",
     })
 }
