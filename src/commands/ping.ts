@@ -7,11 +7,9 @@ import {SlashCommand} from "../structures/slashcommand.js";
 
 export default class PingCommand extends SlashCommand {
     constructor() {
-        super(
-            new SlashCommandBuilder()
-                .setName("ping")
-                .setDescription("Ping! Pong!")
-        );
+        super(new SlashCommandBuilder()
+            .setName("ping")
+            .setDescription("Ping! Pong!"));
     }
 
     async execute(interaction: ChatInputCommandInteraction): Promise<void> {

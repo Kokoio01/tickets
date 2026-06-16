@@ -8,11 +8,9 @@ import {settingsMenu} from "../messages/settings.js";
 
 export default class SetupCommand extends SlashCommand {
     constructor() {
-        super(
-            new SlashCommandBuilder()
-                .setName("setup")
-                .setDescription("Change the settings of the Bot!")
-        );
+        super(new SlashCommandBuilder()
+            .setName("setup")
+            .setDescription("Change the settings of the Bot!"));
     }
 
     async execute(interaction: ChatInputCommandInteraction): Promise<void> {

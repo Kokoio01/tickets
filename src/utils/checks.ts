@@ -17,3 +17,13 @@ export function checkAdministrator(interaction: Interaction): boolean {
     }
     return true;
 }
+
+export function isValidURL(input: string | undefined): boolean {
+    if (!input) return false;
+    try {
+        const url = new URL(input);
+        return url.protocol === "http:" || url.protocol === "https:";
+    } catch (e) {
+        return false;
+    }
+}

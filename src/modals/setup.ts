@@ -1,5 +1,5 @@
 import type { ModalSubmitInteraction } from "discord.js"
-import {checkAdministrator, checkGuild} from "../utils/checks.js";
+import {checkAdministrator, checkGuild, isValidURL} from "../utils/checks.js";
 import {AppError} from "../structures/apperror.js";
 import {settings} from "../db/index.js";
 import { ModalHandler } from "../structures/modalhandler.js";
@@ -69,6 +69,13 @@ export default class SetupButton extends ModalHandler {
                 const imageUrl = interaction.fields.getTextInputValue("imageUrl");
                 const thumbnailUrl = interaction.fields.getTextInputValue("thumbnailUrl");
 
+                if (thumbnailUrl != "") {
+                    if(!isValidURL(thumbnailUrl)) throw new AppError("INVALID_URL")
+                }
+                if (imageUrl != "") {
+                    if(!isValidURL(imageUrl)) throw new AppError("INVALID_URL")
+                }
+
                 await settings.upsert(
                     {
                         guildId: interaction.guild?.id,
@@ -92,6 +99,13 @@ export default class SetupButton extends ModalHandler {
                 const description = interaction.fields.getTextInputValue("description");
                 const imageUrl = interaction.fields.getTextInputValue("imageUrl");
                 const thumbnailUrl = interaction.fields.getTextInputValue("thumbnailUrl");
+
+                if (thumbnailUrl != "") {
+                    if(!isValidURL(thumbnailUrl)) throw new AppError("INVALID_URL")
+                }
+                if (imageUrl != "") {
+                    if(!isValidURL(imageUrl)) throw new AppError("INVALID_URL")
+                }
 
                 await settings.upsert(
                     {

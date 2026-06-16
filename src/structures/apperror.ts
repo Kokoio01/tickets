@@ -21,6 +21,20 @@ const errorMessages = {
         title: "Not in a Guild!",
         description: "This action can only be performed in a guild.",
     },
+    NO_TEXTCHANNEL: {
+        title: "Not in a text channel",
+        description: "This action can only be performed in/on a text channel.",
+    },
+
+    UNABLE_CHANNEL: {
+        title: "Unable to send message",
+        description: "Unable to send message to channel, pls verify the bot has permissions to send messages there.",
+    },
+
+    INVALID_URL: {
+        title: "Invalid URL",
+        description: "The provided URL is not a valid URL.",
+    },
 
     DB_ERROR: {
         title: "Database Error",
