@@ -26,7 +26,7 @@ export default class SetupButton extends ModalHandler {
                         categoryId: category?.id,
                         staffRoleId: staffRole?.id,
                         logChannelId: logChannel?.id,
-                        ticketsPerUser: ticketPerUser,
+                        maxTicketsPerUser: ticketPerUser,
                     }
                 )
 
