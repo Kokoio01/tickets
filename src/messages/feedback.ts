@@ -12,3 +12,18 @@ export function errorMessage(err: AppError): InteractionReplyOptions {
         flags: MessageFlags.Ephemeral,
     }
 }
+
+export function successMessage(
+    title: string,
+    description: string,
+): InteractionReplyOptions {
+    const embed = new EmbedBuilder()
+        .setTitle(title)
+        .setDescription(description)
+        .setColor(0x70f4b0)
+
+    return {
+        embeds: [embed],
+        flags: MessageFlags.Ephemeral,
+    }
+}

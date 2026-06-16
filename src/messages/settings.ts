@@ -8,6 +8,7 @@ import {
     RoleSelectMenuBuilder, TextInputStyle, CheckboxGroupBuilder
 } from "discord.js";
 import {TextInputBuilder} from "discord.js";
+import {openCloseDefaults, panelDefaults, ticketDefaults, welcomeDefaults} from "../utils/default.js";
 
 export function settingsMenu(): InteractionReplyOptions {
     const container = new ContainerBuilder()
@@ -63,7 +64,7 @@ export function settingsTicketModal(
                 .setDescription("Select the category where new tickets will be created.")
                 .setChannelSelectMenuComponent(
                     new ChannelSelectMenuBuilder()
-                        .setCustomId("setup:modal:category")
+                        .setCustomId("category")
                         .setChannelTypes(ChannelType.GuildCategory)
                         .setMaxValues(1)
                         .setRequired(true)
@@ -76,7 +77,7 @@ export function settingsTicketModal(
                 .setDescription("The Staff Role will allow a user to close a ticket and claim/unclaim it.")
                 .setRoleSelectMenuComponent(
                     new RoleSelectMenuBuilder()
-                        .setCustomId("setup:modal:staff")
+                        .setCustomId("staffrole")
                         .setMaxValues(1)
                         .setRequired(true)
                         .setDefaultRoles(staffRole ? [staffRole] : [])
@@ -88,7 +89,7 @@ export function settingsTicketModal(
                 .setDescription("In this Channel we will log all Ticket Actions like Creation/Closing/...")
                 .setChannelSelectMenuComponent(
                     new ChannelSelectMenuBuilder()
-                        .setCustomId("setup:modal:log")
+                        .setCustomId("logchannel")
                         .setChannelTypes(ChannelType.GuildText)
                         .setMaxValues(1)
                         .setRequired(true)
@@ -101,19 +102,19 @@ export function settingsTicketModal(
                 .setDescription("How many tickets is one user allowed to have open. (0 is infinite)")
                 .setTextInputComponent(
                     new TextInputBuilder()
-                        .setCustomId("setup:modal:ticketsuser")
+                        .setCustomId("ticketsPerUser")
                         .setStyle(TextInputStyle.Short)
                         .setRequired(true)
-                        .setValue(String(ticketPerUser))
+                        .setValue(String(ticketPerUser || ticketDefaults.maxTicketsPerUser))
                 )
         )
 }
 
 export function settingsOpenModal(
-    closingReasonRequired: boolean = false,
-    openReasonRequired: boolean = false,
-    userCloseAllowed: boolean = false,
-    pingStaffOnOpen: boolean = false,
+    closingReasonRequired?: boolean,
+    openReasonRequired?: boolean,
+    userCloseAllowed?: boolean,
+    pingStaffOnOpen?: boolean,
 ): ModalBuilder {
     return new ModalBuilder()
         .setCustomId("setup:open")
@@ -124,11 +125,11 @@ export function settingsOpenModal(
                 .setDescription("Toggle on if Close/Open reasons should be required.")
                 .setCheckboxGroupComponent(
                     new CheckboxGroupBuilder()
-                        .setCustomId("setup:check:reasons")
+                        .setCustomId("reasons")
                         .setRequired(false)
                         .addOptions([
-                            {label: "Opening Reason required", description: "Does a User need to enter a reason to open a ticket", value: "open", default: openReasonRequired},
-                            {label: "Close Reason required", description: "Does a User/Staff need to enter a reason to close a ticket", value: "close", default: closingReasonRequired}
+                            {label: "Opening Reason required", description: "Does a User need to enter a reason to open a ticket", value: "open", default: openReasonRequired || openCloseDefaults.openingReasonRequired},
+                            {label: "Close Reason required", description: "Does a User/Staff need to enter a reason to close a ticket", value: "close", default: closingReasonRequired || openCloseDefaults.closingReasonRequired}
                         ])
                 )
         )
@@ -138,10 +139,10 @@ export function settingsOpenModal(
                 .setDescription("Allow Users to close their tickets themself")
                 .setCheckboxGroupComponent(
                     new CheckboxGroupBuilder()
-                        .setCustomId("setup:check:userclose")
+                        .setCustomId("userClose")
                         .setRequired(false)
                         .addOptions([
-                            {label: "Allow User Close", description: "Allow Users to close their tickets themself", value: "allow", default: userCloseAllowed}
+                            {label: "Allow User Close", description: "Allow Users to close their tickets themself", value: "allow", default: userCloseAllowed || openCloseDefaults.allowUserClose}
                         ])
                 )
         )
@@ -151,20 +152,20 @@ export function settingsOpenModal(
                 .setDescription("Ping your Staff when a new Ticket is opened")
                 .setCheckboxGroupComponent(
                     new CheckboxGroupBuilder()
-                        .setCustomId("setup:check:ping")
+                        .setCustomId("pingOnOpen")
                         .setRequired(false)
                         .addOptions([
-                            {label: "Ping Staff", description: "Ping your Staff when a new Ticket is opened", value: "ping", default: pingStaffOnOpen}
+                            {label: "Ping Staff", description: "Ping your Staff when a new Ticket is opened", value: "ping", default: pingStaffOnOpen || openCloseDefaults.pingOnOpen}
                         ])
                 )
         )
 }
 
 export function settingsPanelModal(
-    title: string = "",
-    description: string = "",
-    imageUrl: string = "",
-    thumbnailUrl: string = "",
+    title?: string,
+    description?: string,
+    imageUrl?: string,
+    thumbnailUrl?: string ,
 ): ModalBuilder {
     return new ModalBuilder()
         .setCustomId("setup:panel")
@@ -174,11 +175,11 @@ export function settingsPanelModal(
                 .setLabel("Title")
                 .setTextInputComponent(
                     new TextInputBuilder()
-                        .setCustomId("setup:modal:panel:title")
+                        .setCustomId("title")
                         .setStyle(TextInputStyle.Short)
                         .setMaxLength(256)
                         .setRequired(true)
-                        .setValue(title)
+                        .setValue(title || panelDefaults.title)
                 )
         )
         .addLabelComponents(
@@ -186,11 +187,11 @@ export function settingsPanelModal(
                 .setLabel("Description")
                 .setTextInputComponent(
                     new TextInputBuilder()
-                        .setCustomId("setup:modal:panel:description")
+                        .setCustomId("description")
                         .setStyle(TextInputStyle.Paragraph)
                         .setMaxLength(4000)
                         .setRequired(true)
-                        .setValue(description)
+                        .setValue(description || panelDefaults.description)
                 )
         )
         .addLabelComponents(
@@ -198,11 +199,11 @@ export function settingsPanelModal(
                 .setLabel("Image URL")
                 .setTextInputComponent(
                     new TextInputBuilder()
-                        .setCustomId("setup:modal:panel:image")
+                        .setCustomId("imageUrl")
                         .setStyle(TextInputStyle.Short)
                         .setMaxLength(2048)
                         .setRequired(false)
-                        .setValue(imageUrl)
+                        .setValue(imageUrl || panelDefaults.imageUrl)
                 )
         )
         .addLabelComponents(
@@ -210,20 +211,20 @@ export function settingsPanelModal(
                 .setLabel("Thumbnail URL")
                 .setTextInputComponent(
                     new TextInputBuilder()
-                        .setCustomId("setup:modal:panel:thumbnail")
+                        .setCustomId("thumbnailUrl")
                         .setStyle(TextInputStyle.Short)
                         .setMaxLength(2048)
                         .setRequired(false)
-                        .setValue(thumbnailUrl)
+                        .setValue(thumbnailUrl || panelDefaults.thumbnailUrl)
                 )
         )
 }
 
 export function settingsWelcomeModal(
-    title: string = "",
-    description: string = "",
-    imageUrl: string = "",
-    thumbnailUrl: string = "",
+    title?: string,
+    description?: string,
+    imageUrl?: string,
+    thumbnailUrl?: string,
 ): ModalBuilder {
     return new ModalBuilder()
         .setCustomId("setup:welcome")
@@ -233,11 +234,11 @@ export function settingsWelcomeModal(
                 .setLabel("Title")
                 .setTextInputComponent(
                     new TextInputBuilder()
-                        .setCustomId("setup:modal:welcome:title")
+                        .setCustomId("title")
                         .setStyle(TextInputStyle.Short)
                         .setMaxLength(256)
                         .setRequired(true)
-                        .setValue(title)
+                        .setValue(title || welcomeDefaults.title)
                 )
         )
         .addLabelComponents(
@@ -245,11 +246,11 @@ export function settingsWelcomeModal(
                 .setLabel("Description")
                 .setTextInputComponent(
                     new TextInputBuilder()
-                        .setCustomId("setup:modal:welcome:description")
+                        .setCustomId("description")
                         .setStyle(TextInputStyle.Paragraph)
                         .setMaxLength(4000)
                         .setRequired(true)
-                        .setValue(description)
+                        .setValue(description || welcomeDefaults.description)
                 )
         )
         .addLabelComponents(
@@ -257,11 +258,11 @@ export function settingsWelcomeModal(
                 .setLabel("Image URL")
                 .setTextInputComponent(
                     new TextInputBuilder()
-                        .setCustomId("setup:modal:welcome:image")
+                        .setCustomId("imageUrl")
                         .setStyle(TextInputStyle.Short)
                         .setMaxLength(2048)
                         .setRequired(false)
-                        .setValue(imageUrl)
+                        .setValue(imageUrl || welcomeDefaults.imageUrl)
                 )
         )
         .addLabelComponents(
@@ -269,11 +270,11 @@ export function settingsWelcomeModal(
                 .setLabel("Thumbnail URL")
                 .setTextInputComponent(
                     new TextInputBuilder()
-                        .setCustomId("setup:modal:welcome:thumbnail")
+                        .setCustomId("thumbnailUrl")
                         .setStyle(TextInputStyle.Short)
                         .setMaxLength(2048)
                         .setRequired(false)
-                        .setValue(thumbnailUrl)
+                        .setValue(thumbnailUrl || welcomeDefaults.thumbnailUrl)
                 )
         )
 }
