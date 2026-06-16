@@ -1,9 +1,9 @@
-import type {ChatInputCommandInteraction, SlashCommandBuilder} from "discord.js";
+import type {ChatInputCommandInteraction, SlashCommandBuilder, SlashCommandSubcommandsOnlyBuilder} from "discord.js";
 
 export abstract class SlashCommand {
-    public readonly data: SlashCommandBuilder;
+    public readonly data: SlashCommandBuilder | SlashCommandSubcommandsOnlyBuilder;
 
-    protected constructor(data: SlashCommandBuilder) {
+    protected constructor(data: SlashCommandBuilder | SlashCommandSubcommandsOnlyBuilder) {
         this.data = data;
     }
 

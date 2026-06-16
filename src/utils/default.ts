@@ -1,8 +1,8 @@
 export const panelDefaults = {
     title: "Support",
     description: "Welcome to our Support! Please use the button below this message to create a new ticket.",
-    imageUrl: "",
-    thumbnailUrl: "",
+    imageUrl: null,
+    thumbnailUrl: null,
 }
 
 export const welcomeDefaults = {

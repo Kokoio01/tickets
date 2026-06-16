@@ -203,7 +203,7 @@ export function settingsPanelModal(
                         .setStyle(TextInputStyle.Short)
                         .setMaxLength(2048)
                         .setRequired(false)
-                        .setValue(imageUrl || panelDefaults.imageUrl)
+                        .setValue(imageUrl || "")
                 )
         )
         .addLabelComponents(
@@ -215,7 +215,7 @@ export function settingsPanelModal(
                         .setStyle(TextInputStyle.Short)
                         .setMaxLength(2048)
                         .setRequired(false)
-                        .setValue(thumbnailUrl || panelDefaults.thumbnailUrl)
+                        .setValue(thumbnailUrl || "")
                 )
         )
 }
