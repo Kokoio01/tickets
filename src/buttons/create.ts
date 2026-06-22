@@ -1,4 +1,4 @@
-import type { ButtonInteraction } from "discord.js";
+import {type ButtonInteraction, MessageFlags} from "discord.js";
 import {ButtonHandler} from "../structures/buttonhandler.js";
 import {checkGuild} from "../utils/checks.js";
 import {settings} from "../db/index.js";
@@ -11,6 +11,7 @@ export default class CreateButton extends ButtonHandler {
     public name: string = "create";
 
     async execute(interaction: ButtonInteraction): Promise<void> {
+        await interaction.deferReply({flags: MessageFlags.Ephemeral});
         checkGuild(interaction);
 
         const guildSettings = await settings.findOne({where: {guildId: interaction.guild?.id}});

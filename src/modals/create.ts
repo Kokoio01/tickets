@@ -1,4 +1,4 @@
-import type { ModalSubmitInteraction } from "discord.js";
+import {MessageFlags, type ModalSubmitInteraction} from "discord.js";
 import {ModalHandler} from "../structures/modalhandler.js";
 import {checkGuild} from "../utils/checks.js";
 import {openTicket} from "../utils/tickets.js";
@@ -9,6 +9,7 @@ export default class CreateModal extends ModalHandler {
     public name: string = "create";
 
     async execute(interaction: ModalSubmitInteraction): Promise<void> {
+        await interaction.deferReply({flags: MessageFlags.Ephemeral});
         checkGuild(interaction);
 
         const reason = interaction.fields.getTextInputValue("reason")
