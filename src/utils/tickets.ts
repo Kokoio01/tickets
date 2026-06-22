@@ -68,7 +68,7 @@ export async function openTicket(
         throw new AppError("TICKET_CHANNEL_FAILED");
     }
 
-    await tickets.create({
+    const ticket = await tickets.create({
         guildId: interaction.guild.id,
         ticketId: nanoid(8),
         channelId: ticketChannel.id,
@@ -76,6 +76,7 @@ export async function openTicket(
         reason: reason,
     })
 
+    let message;
     try {
         const imageUrl = isValidURL(guildSettings.welcomeImageUrl)
             ? guildSettings.welcomeImageUrl
@@ -107,7 +108,7 @@ export async function openTicket(
             ]
         })
 
-        await ticketChannel.send({
+         message = await ticketChannel.send({
             ...(guildSettings.pingOnOpen && {
                 content: `<@${interaction.user.id}> <@&${validStaffRole.id}>`,
             }),
@@ -121,6 +122,8 @@ export async function openTicket(
         logger.error(`Welcome Message Failed: ${error}`)
         throw new AppError("TICKET_WELCOME_FAILED");
     }
+
+    await ticket.update({messageId: message.id})
 
     return ticketChannel;
 }

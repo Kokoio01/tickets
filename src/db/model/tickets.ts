@@ -5,6 +5,7 @@ export class Tickets extends Model {
     declare readonly ticketId: string;
 
     declare channelId: string;
+    declare messageId: string | null;
     declare openerId: string;
     declare reason: string | null;
     declare closed: boolean;
@@ -26,6 +27,10 @@ export default (sequelize: Sequelize) => {
         channelId: {
             type: DataTypes.STRING,
             allowNull: false,
+        },
+        messageId: {
+            type: DataTypes.STRING,
+            allowNull: true,
         },
         openerId: {
             type: DataTypes.STRING,
