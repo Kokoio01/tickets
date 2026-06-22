@@ -8,8 +8,8 @@ export const panelDefaults = {
 export const welcomeDefaults = {
     title: "Welcome to your Ticket!",
     description: "Please state your question and wait for an answer by our support team!",
-    imageUrl: "",
-    thumbnailUrl: "",
+    imageUrl: null,
+    thumbnailUrl: null,
 }
 
 export const openCloseDefaults = {

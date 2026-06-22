@@ -262,7 +262,7 @@ export function settingsWelcomeModal(
                         .setStyle(TextInputStyle.Short)
                         .setMaxLength(2048)
                         .setRequired(false)
-                        .setValue(imageUrl || welcomeDefaults.imageUrl)
+                        .setValue(imageUrl || "")
                 )
         )
         .addLabelComponents(
@@ -274,7 +274,7 @@ export function settingsWelcomeModal(
                         .setStyle(TextInputStyle.Short)
                         .setMaxLength(2048)
                         .setRequired(false)
-                        .setValue(thumbnailUrl || welcomeDefaults.thumbnailUrl)
+                        .setValue(thumbnailUrl || "")
                 )
         )
 }

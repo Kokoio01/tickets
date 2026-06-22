@@ -36,6 +36,32 @@ const errorMessages = {
         description: "The provided URL is not a valid URL.",
     },
 
+    MISSING_CONFIG: {
+        title: "Missing configuration",
+        description: "This server has not been configured. Please contact the server administrator.",
+    },
+
+    TICKET_LIMIT_REACHED: {
+        title: "Ticket limit reached",
+        description: "You have reached the limit on how many tickets you can have open at once."
+    },
+    TICKET_CATEGORY_FULL: {
+        title: "Capacity reached",
+        description: "We currently have reached our maximum ticket capacity, please try again later.",
+    },
+    TICKET_CHANNEL_FAILED: {
+        title: "Failed to create a ticket",
+        description: "Unable to create ticket channel. Please contact the server administrator.",
+    },
+    TICKET_WELCOME_FAILED: {
+        title: "Failed sending message in ticket",
+        description: "Your ticket has been created, but the welcome message wasn't sent. Please contact the server administrator.",
+    },
+    TICKET_REASON_REQUIRED: {
+        title: "Reason required",
+        description: "To open a ticket please enter a reason in the modal."
+    },
+
     DB_ERROR: {
         title: "Database Error",
         description: "An error has occurred while querying the database.",

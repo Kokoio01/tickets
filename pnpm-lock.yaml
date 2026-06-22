@@ -20,6 +20,9 @@ importers:
       galactic.ts:
         specifier: ^2.1.5
         version: 2.1.5
+      nanoid:
+        specifier: ^5.1.14
+        version: 5.1.14
       pino:
         specifier: ^10.3.1
         version: 10.3.1
@@ -493,6 +496,11 @@ packages:
 
   msgpackr@1.11.5:
     resolution: {integrity: sha512-UjkUHN0yqp9RWKy0Lplhh+wlpdt9oQBYgULZOiFhV3VclSF1JnSQWZ5r9gORQlNYaUKQoR8itv7g7z1xDDuACA==}
+
+  nanoid@5.1.14:
+    resolution: {integrity: sha512-5c8l8kVzqpnDPaicbEop/fV0Q1w16FmbWtVhMqugTozAwYdlIQojWH5a/M7UfziFmGdQRrUdV+EPzc9Xng3VAQ==}
+    engines: {node: ^18 || >=20}
+    hasBin: true
 
   napi-build-utils@2.0.0:
     resolution: {integrity: sha512-GEbrYkbfF7MoNaoh2iGG84Mnf/WZfB0GdGEsM8wz7Expx/LlWf5U8t9nvJKXSp3qr5IsEbK04cBGhol/KwOsWA==}
@@ -1141,6 +1149,8 @@ snapshots:
     optionalDependencies:
       msgpackr-extract: 3.0.4
     optional: true
+
+  nanoid@5.1.14: {}
 
   napi-build-utils@2.0.0: {}
 

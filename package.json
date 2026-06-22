@@ -17,6 +17,7 @@
     "discord.js": "^14.26.4",
     "dotenv": "^17.4.2",
     "galactic.ts": "^2.1.5",
+    "nanoid": "^5.1.14",
     "pino": "^10.3.1",
     "sequelize": "^6.37.8",
     "sqlite3": "^6.0.1",
