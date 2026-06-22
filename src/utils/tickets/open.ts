@@ -1,3 +1,4 @@
+import {logger} from "../logger.js";
 import {
     ActionRowBuilder, ButtonBuilder, ButtonStyle,
     CategoryChannel,
@@ -5,16 +6,14 @@ import {
     type GuildTextBasedChannel,
     type Interaction,
     PermissionsBitField,
-    type Role, TextChannel,
+    type Role
 } from "discord.js";
-import type {Settings} from "../db/model/settings.js";
-import {settings, tickets} from "../db/index.js";
-import {AppError} from "../structures/apperror.js";
-import {checkGuild, isValidURL} from "./checks.js";
+import type {Settings} from "../../db/model/settings.js";
+import {checkGuild, isValidURL} from "../checks.js";
+import {AppError} from "../../structures/apperror.js";
+import {settings, tickets} from "../../db/index.js";
 import {nanoid} from "nanoid";
-import {welcomeDefaults} from "./default.js";
-import {logger} from "./logger.js";
-import type {Tickets} from "../db/model/tickets.js";
+import {welcomeDefaults} from "../default.js";
 
 export async function openTicket(
     interaction: Interaction,
@@ -54,7 +53,7 @@ export async function openTicket(
 
     let ticketChannel: GuildTextBasedChannel
     try {
-         ticketChannel = await validCategory.children.create({
+        ticketChannel = await validCategory.children.create({
             name: `ticket-${username}`,
             type: ChannelType.GuildText,
             reason: `${username} - Ticket Opening`,
@@ -109,7 +108,7 @@ export async function openTicket(
             ]
         })
 
-         message = await ticketChannel.send({
+        message = await ticketChannel.send({
             ...(guildSettings.pingOnOpen && {
                 content: `<@${interaction.user.id}> <@&${validStaffRole.id}>`,
             }),
@@ -127,38 +126,4 @@ export async function openTicket(
     await ticket.update({messageId: message.id})
 
     return ticketChannel;
-}
-
-export async function closeTicket(
-    interaction: Interaction,
-    ticket: Tickets,
-    guildSettings?: Settings | null,
-    reason?: string | null
-): Promise<void> {
-    if(!checkGuild(interaction)) throw new AppError("NO_GUILD")
-    if (!guildSettings) {
-        guildSettings = await settings.findOne({where: {guildId: interaction.guild?.id}});
-        if (!guildSettings) throw new AppError("MISSING_CONFIG")
-    }
-
-    const ticketChannel = interaction.guild.channels.cache.get(ticket.channelId)
-        || await interaction.guild.channels.fetch(ticket.channelId);
-    const logChannel = interaction.guild.channels.cache.get(guildSettings.logChannelId)
-        || await interaction.guild.channels.fetch(guildSettings.logChannelId);
-    const username = interaction.user.username;
-
-    if (!(ticketChannel instanceof TextChannel)) {
-        throw new AppError("TICKET_DELETION_FAILED")
-    }
-
-    try {
-        await ticketChannel.delete(
-            `${username} - ${ticketChannel.id} - Ticket deleted - ${reason || "No reason available"}`,
-        )
-    } catch (error) {
-        logger.error(`Ticket Channel Error: ${error}`)
-        throw new AppError("TICKET_DELETION_FAILED");
-    }
-
-    await ticket.update({closed: true})
 }
