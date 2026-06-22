@@ -34,6 +34,10 @@ const errorMessages = {
         title: "Unable to send message",
         description: "Unable to send message to channel, pls verify the bot has permissions to send messages there.",
     },
+    UNABLE_MESSAGE: {
+        title: "Unable to find message",
+        description: "This action was performed by a message, that is not available. Please try again.",
+    },
 
     INVALID_URL: {
         title: "Invalid URL",
@@ -61,6 +65,10 @@ const errorMessages = {
         title: "Failed sending message in ticket",
         description: "Your ticket has been created, but the welcome message wasn't sent. Please contact the server administrator.",
     },
+    TICKET_WELCOME_ClAIM_UPDATE_FAILED: {
+        title: "Failed to update welcome message",
+        description: "The welcome message couldn't be updated. Please contact the server administrator.",
+    },
     TICKET_OPEN_REASON_REQUIRED: {
         title: "Reason required",
         description: "To open a ticket please enter a reason."
@@ -76,6 +84,14 @@ const errorMessages = {
     TICKET_DELETION_FAILED: {
         title: "Failed to delete the ticket",
         description: "Unable to delete the ticket. Please contact the server administrator.",
+    },
+    TICKET_ALREADY_CLAIMED: {
+        title: "Already claimed",
+        description: "This ticket has already been claimed.",
+    },
+    TICKET_NOT_CLAIMED: {
+        title: "Not claimed",
+        description: "This ticket has not been claimed.",
     },
 
     DB_ERROR: {

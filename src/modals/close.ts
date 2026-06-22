@@ -1,7 +1,7 @@
 import {type ModalSubmitInteraction} from "discord.js";
 import {ModalHandler} from "../structures/modalhandler.js";
 import {checkGuild, checkStaff} from "../utils/checks.js";
-import {closeTicket} from "../utils/tickets.js";
+import {closeTicket} from "../utils/tickets/close.js";
 import {AppError} from "../structures/apperror.js";
 import {settings, tickets} from "../db/index.js";
 import {closingSoonMessage} from "../messages/close.js";

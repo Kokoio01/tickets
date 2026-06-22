@@ -1,7 +1,7 @@
 import {MessageFlags, type ModalSubmitInteraction} from "discord.js";
 import {ModalHandler} from "../structures/modalhandler.js";
 import {checkGuild} from "../utils/checks.js";
-import {openTicket} from "../utils/tickets.js";
+import {openTicket} from "../utils/tickets/open.js";
 import {AppError} from "../structures/apperror.js";
 import {successMessage} from "../messages/feedback.js";
 

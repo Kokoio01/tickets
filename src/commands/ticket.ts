@@ -1,7 +1,6 @@
 import {
     type ChatInputCommandInteraction,
     SlashCommandBuilder, SlashCommandSubcommandBuilder,
-    MessageFlags,
 } from "discord.js";
 import {SlashCommand} from "../structures/slashcommand.js";
 import {AppError} from "../structures/apperror.js";
@@ -9,7 +8,9 @@ import {settings, tickets} from "../db/index.js";
 import {checkGuild, checkStaff} from "../utils/checks.js";
 import {openCloseDefaults} from "../utils/default.js";
 import {closingSoonMessage} from "../messages/close.js";
-import {closeTicket} from "../utils/tickets.js";
+import {closeTicket} from "../utils/tickets/close.js";
+import {claimTicket, unclaimTicket} from "../utils/tickets/claim.js";
+import {claimMessage, unclaimMessage} from "../messages/claim.js";
 
 export default class TicketCommand extends SlashCommand {
     constructor() {
@@ -27,6 +28,16 @@ export default class TicketCommand extends SlashCommand {
                                 .setDescription("Your reason for closing this ticket.")
                                 .setRequired(false),
                         )
+                )
+                .addSubcommand(
+                    new SlashCommandSubcommandBuilder()
+                        .setName("claim")
+                        .setDescription("Claims the ticket.")
+                )
+                .addSubcommand(
+                    new SlashCommandSubcommandBuilder()
+                        .setName("unclaim")
+                        .setDescription("Unclaims the ticket.")
                 )
         );
     }
@@ -46,10 +57,6 @@ export default class TicketCommand extends SlashCommand {
         switch(subcommand) {
             case "close": {
                 await interaction.deferReply()
-                const ticket = await tickets.findOne({where: {channelId: interaction.channelId}});
-                if (!ticket) {
-                    throw new AppError("NO_TICKET_CHANNEL")
-                }
 
                 if (!guildSettings.userCloseAllowed) {
                     checkStaff(interaction, guildSettings.staffRoleId)
@@ -69,6 +76,22 @@ export default class TicketCommand extends SlashCommand {
                 await new Promise(resolve => setTimeout(resolve, 5000));
 
                 await closeTicket(interaction, ticket, guildSettings, reason);
+                return;
+            }
+            case "claim": {
+                checkStaff(interaction, guildSettings.staffRoleId);
+
+                await claimTicket(interaction, ticket)
+
+                await interaction.reply(claimMessage(interaction.user))
+                return;
+            }
+            case "unclaim": {
+                checkStaff(interaction, guildSettings.staffRoleId);
+
+                await unclaimTicket(interaction, ticket)
+
+                await interaction.reply(unclaimMessage(interaction.user))
                 return;
             }
             default: {

@@ -4,8 +4,8 @@ import {checkGuild} from "../utils/checks.js";
 import {settings} from "../db/index.js";
 import {openCloseDefaults} from "../utils/default.js";
 import {openingReasonModal} from "../messages/create.js";
-import {openTicket} from "../utils/tickets.js";
 import {successMessage} from "../messages/feedback.js";
+import {openTicket} from "../utils/tickets/open.js";
 
 export default class CreateButton extends ButtonHandler {
     public name: string = "create";

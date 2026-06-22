@@ -5,7 +5,7 @@ import {settings, tickets} from "../db/index.js";
 import {openCloseDefaults} from "../utils/default.js";
 import {closingReasonModal, closingSoonMessage} from "../messages/close.js";
 import {AppError} from "../structures/apperror.js";
-import {closeTicket} from "../utils/tickets.js";
+import {closeTicket} from "../utils/tickets/close.js";
 
 export default class CloseButton extends ButtonHandler {
     public name: string = "close";
