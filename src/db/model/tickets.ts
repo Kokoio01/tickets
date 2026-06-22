@@ -9,6 +9,8 @@ export class Tickets extends Model {
     declare openerId: string;
     declare reason: string | null;
     declare closed: boolean;
+    declare closeReason: string | null;
+    declare closerId: string | null;
     declare claimerId: string | null;
 }
 
@@ -44,6 +46,14 @@ export default (sequelize: Sequelize) => {
             type: DataTypes.BOOLEAN,
             allowNull: false,
             defaultValue: false,
+        },
+        closeReason: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
+        closerId: {
+            type: DataTypes.STRING,
+            allowNull: true,
         },
         claimerId: {
             type: DataTypes.STRING,

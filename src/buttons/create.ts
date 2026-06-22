@@ -25,7 +25,7 @@ export default class CreateButton extends ButtonHandler {
 
         const channel = await openTicket(interaction, guildSettings);
 
-        await interaction.reply(successMessage("Your Ticket has been created", `Access it here: <#${channel.id}>`))
+        await interaction.followUp(successMessage("Your Ticket has been created", `Access it here: <#${channel.id}>`))
     }
 
 }

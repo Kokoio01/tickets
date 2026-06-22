@@ -5,6 +5,7 @@ import type {Settings} from "../../db/model/settings.js";
 import {checkGuild} from "../checks.js";
 import {settings} from "../../db/index.js";
 import {logger} from "../logger.js";
+import {closeTicketLogMessage} from "../../messages/logging.js";
 
 export async function closeTicket(
     interaction: Interaction,
@@ -37,5 +38,17 @@ export async function closeTicket(
         throw new AppError("TICKET_DELETION_FAILED");
     }
 
-    await ticket.update({closed: true})
+    await ticket.update({
+        closed: true,
+        closeReason: reason,
+        closerId: interaction.user.id,
+    });
+
+    if (logChannel instanceof TextChannel) {
+        try {
+            await logChannel.send(closeTicketLogMessage(ticket))
+        } catch (error) {
+            logger.error(`Log Channel Error: ${error}`)
+        }
+    }
 }

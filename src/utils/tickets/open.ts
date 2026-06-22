@@ -6,7 +6,7 @@ import {
     type GuildTextBasedChannel,
     type Interaction,
     PermissionsBitField,
-    type Role
+    type Role, TextChannel
 } from "discord.js";
 import type {Settings} from "../../db/model/settings.js";
 import {checkGuild, isValidURL} from "../checks.js";
@@ -14,6 +14,7 @@ import {AppError} from "../../structures/apperror.js";
 import {settings, tickets} from "../../db/index.js";
 import {nanoid} from "nanoid";
 import {welcomeDefaults} from "../default.js";
+import {createTicketLogMessage} from "../../messages/logging.js";
 
 export async function openTicket(
     interaction: Interaction,
@@ -124,6 +125,14 @@ export async function openTicket(
     }
 
     await ticket.update({messageId: message.id})
+
+    if (logChannel instanceof TextChannel) {
+        try {
+            await logChannel.send(createTicketLogMessage(ticket))
+        } catch (error) {
+            logger.error(`Log Channel Error: ${error}`)
+        }
+    }
 
     return ticketChannel;
 }
