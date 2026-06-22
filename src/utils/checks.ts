@@ -18,6 +18,13 @@ export function checkAdministrator(interaction: Interaction): boolean {
     return true;
 }
 
+export function checkStaff(interaction: Interaction, staffRole: string): boolean {
+    if (!interaction.inCachedGuild() || !interaction.member?.roles.cache.has(staffRole)) {
+        throw new AppError("TICKET_STAFF_REQUIRED");
+    }
+    return true;
+}
+
 export function isValidURL(input: string | undefined): boolean {
     if (!input) return false;
     try {

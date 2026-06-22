@@ -11,7 +11,6 @@ export default class CreateButton extends ButtonHandler {
     public name: string = "create";
 
     async execute(interaction: ButtonInteraction): Promise<void> {
-        await interaction.deferReply({flags: MessageFlags.Ephemeral});
         checkGuild(interaction);
 
         const guildSettings = await settings.findOne({where: {guildId: interaction.guild?.id}});
@@ -21,6 +20,8 @@ export default class CreateButton extends ButtonHandler {
             await interaction.showModal(openingReasonModal())
             return;
         }
+
+        await interaction.deferReply({flags: MessageFlags.Ephemeral});
 
         const channel = await openTicket(interaction, guildSettings);
 

@@ -25,6 +25,10 @@ const errorMessages = {
         title: "Not in a text channel",
         description: "This action can only be performed in/on a text channel.",
     },
+    NO_TICKET_CHANNEL: {
+        title: "Not in a ticket",
+        description: "This action can only be performed in/on a ticket",
+    },
 
     UNABLE_CHANNEL: {
         title: "Unable to send message",
@@ -57,9 +61,21 @@ const errorMessages = {
         title: "Failed sending message in ticket",
         description: "Your ticket has been created, but the welcome message wasn't sent. Please contact the server administrator.",
     },
-    TICKET_REASON_REQUIRED: {
+    TICKET_OPEN_REASON_REQUIRED: {
         title: "Reason required",
-        description: "To open a ticket please enter a reason in the modal."
+        description: "To open a ticket please enter a reason."
+    },
+    TICKET_CLOSE_REASON_REQUIRED: {
+        title: "Reason required",
+        description: "To close this ticket please enter a reason."
+    },
+    TICKET_STAFF_REQUIRED: {
+        title: "Staff required",
+        description: "To perform this action you need to be part of the staff team."
+    },
+    TICKET_DELETION_FAILED: {
+        title: "Failed to delete the ticket",
+        description: "Unable to delete the ticket. Please contact the server administrator.",
     },
 
     DB_ERROR: {

@@ -13,11 +13,11 @@ export default class CreateModal extends ModalHandler {
         checkGuild(interaction);
 
         const reason = interaction.fields.getTextInputValue("reason")
-        if (!reason || reason.length > 1024) throw new AppError("TICKET_REASON_REQUIRED");
+        if (!reason || reason.length > 1024) throw new AppError("TICKET_OPEN_REASON_REQUIRED");
 
         const channel = await openTicket(interaction, undefined, reason);
 
-        await interaction.reply(successMessage("Your Ticket has been created", `Access it here: <#${channel.id}>`))
+        await interaction.followUp(successMessage("Your Ticket has been created", `Access it here: <#${channel.id}>`))
     }
 
 }

@@ -5,7 +5,7 @@ import {
     type GuildTextBasedChannel,
     type Interaction,
     PermissionsBitField,
-    type Role,
+    type Role, TextChannel,
 } from "discord.js";
 import type {Settings} from "../db/model/settings.js";
 import {settings, tickets} from "../db/index.js";
@@ -14,6 +14,7 @@ import {checkGuild, isValidURL} from "./checks.js";
 import {nanoid} from "nanoid";
 import {welcomeDefaults} from "./default.js";
 import {logger} from "./logger.js";
+import type {Tickets} from "../db/model/tickets.js";
 
 export async function openTicket(
     interaction: Interaction,
@@ -126,4 +127,38 @@ export async function openTicket(
     await ticket.update({messageId: message.id})
 
     return ticketChannel;
+}
+
+export async function closeTicket(
+    interaction: Interaction,
+    ticket: Tickets,
+    guildSettings?: Settings | null,
+    reason?: string | null
+): Promise<void> {
+    if(!checkGuild(interaction)) throw new AppError("NO_GUILD")
+    if (!guildSettings) {
+        guildSettings = await settings.findOne({where: {guildId: interaction.guild?.id}});
+        if (!guildSettings) throw new AppError("MISSING_CONFIG")
+    }
+
+    const ticketChannel = interaction.guild.channels.cache.get(ticket.channelId)
+        || await interaction.guild.channels.fetch(ticket.channelId);
+    const logChannel = interaction.guild.channels.cache.get(guildSettings.logChannelId)
+        || await interaction.guild.channels.fetch(guildSettings.logChannelId);
+    const username = interaction.user.username;
+
+    if (!(ticketChannel instanceof TextChannel)) {
+        throw new AppError("TICKET_DELETION_FAILED")
+    }
+
+    try {
+        await ticketChannel.delete(
+            `${username} - ${ticketChannel.id} - Ticket deleted - ${reason || "No reason available"}`,
+        )
+    } catch (error) {
+        logger.error(`Ticket Channel Error: ${error}`)
+        throw new AppError("TICKET_DELETION_FAILED");
+    }
+
+    await ticket.update({closed: true})
 }
