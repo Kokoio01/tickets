@@ -99,6 +99,11 @@ const errorMessages = {
         description: "An error has occurred while querying the database.",
     },
 
+    BEING_EDITED: {
+        title: "Being Edited!",
+        description: "This resource is currently being edited!",
+    },
+
     PERM_ADMINISTRATOR: {
         title: "Not an Administrator",
         description: "This action can only be performed as a administrator.",
