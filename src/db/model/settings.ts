@@ -13,6 +13,9 @@ export class Settings extends Model {
     declare userCloseAllowed: boolean;
     declare pingOnOpen: boolean;
 
+    declare overflowCategoryAllowed: boolean;
+    declare overflowCategories: string[];
+
     declare panelTitle: string;
     declare panelDescription: string;
     declare panelImageUrl: string;
@@ -68,6 +71,18 @@ export default (sequelize: Sequelize) => {
             type: DataTypes.BOOLEAN,
             defaultValue: false,
             allowNull: false,
+        },
+
+        // Overflow
+        overflowCategoryAllowed: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
+            allowNull: false,
+        },
+        overflowCategories: {
+            type: DataTypes.JSON,
+            allowNull: false,
+            defaultValue: [],
         },
 
         // Welcome Message

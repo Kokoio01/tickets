@@ -44,6 +44,7 @@ export default class SetupButton extends ModalHandler {
                 const closingReasonRequired = reasonsRequired.includes("close")
                 const userCloseAllowed = interaction.fields.getCheckboxGroup("userClose").length === 1;
                 const pingOnOpen = interaction.fields.getCheckboxGroup("pingOnOpen").length === 1;
+                const overflowCategoryAllowed = interaction.fields.getCheckboxGroup("overflow").length === 1;
 
                 await settings.upsert(
                     {
@@ -52,6 +53,7 @@ export default class SetupButton extends ModalHandler {
                         closingReasonRequired,
                         userCloseAllowed,
                         pingOnOpen,
+                        overflowCategoryAllowed,
                     }
                 )
 
@@ -60,6 +62,7 @@ export default class SetupButton extends ModalHandler {
                     `**Closing reason required:** ${closingReasonRequired ? "Yes" : "No"}`,
                     `**Allow users to close:** ${userCloseAllowed ? "Yes" : "No"}`,
                     `**Ping on Open:** ${pingOnOpen ? "Yes" : "No"}`,
+                    `**Allow Overflow Categories:** ${overflowCategoryAllowed ? "Yes" : "No"}`,
                 ].join("\n")))
                 return;
             }

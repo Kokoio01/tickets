@@ -34,7 +34,8 @@ export default class SetupButton extends ButtonHandler {
                     settingsData?.closingReasonRequired,
                     settingsData?.openingReasonRequired,
                     settingsData?.userCloseAllowed,
-                    settingsData?.pingOnOpen
+                    settingsData?.pingOnOpen,
+                    settingsData?.overflowCategoryAllowed
                 ));
                 return;
             }

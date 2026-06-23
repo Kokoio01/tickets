@@ -17,6 +17,7 @@ export const openCloseDefaults = {
     closingReasonRequired: false,
     allowUserClose: false,
     pingOnOpen: false,
+    overflowCategoryAllowed: false,
 }
 
 export const ticketDefaults = {

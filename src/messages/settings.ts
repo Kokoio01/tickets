@@ -18,7 +18,7 @@ export function settingsMenu(): InteractionReplyOptions {
 
     const settings = [
         { id: "ticket", title: "Ticket Settings", description: "Staff, Logs, Category, Tickets per user" },
-        { id: "open", title: "Open / Close", description: "Open/Close Reason, User Close, Ping on Open" },
+        { id: "open", title: "Open / Close", description: "Open/Close Reason, User Close, Ping on Open, Overflow" },
         { id: "panel", title: "Panel Message", description: "Customize the Panel Message" },
         { id: "welcome", title: "Welcome Message", description: "Customize the Welcome Message" },
     ]
@@ -115,6 +115,7 @@ export function settingsOpenModal(
     openReasonRequired?: boolean,
     userCloseAllowed?: boolean,
     pingStaffOnOpen?: boolean,
+    overflowCategoryAllowed?: boolean,
 ): ModalBuilder {
     return new ModalBuilder()
         .setCustomId("setup:open")
@@ -156,6 +157,19 @@ export function settingsOpenModal(
                         .setRequired(false)
                         .addOptions([
                             {label: "Ping Staff", description: "Ping your Staff when a new Ticket is opened", value: "ping", default: pingStaffOnOpen || openCloseDefaults.pingOnOpen}
+                        ])
+                )
+        )
+        .addLabelComponents(
+            new LabelBuilder()
+                .setLabel("Overflow Category")
+                .setDescription("Should new categories be created when the main category is full")
+                .setCheckboxGroupComponent(
+                    new CheckboxGroupBuilder()
+                        .setCustomId("overflow")
+                        .setRequired(false)
+                        .addOptions([
+                            {label: "Overflow Category", description: "Should new categories be created when the main category is full", value: "overflow", default: overflowCategoryAllowed || openCloseDefaults.overflowCategoryAllowed}
                         ])
                 )
         )
