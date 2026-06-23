@@ -21,9 +21,8 @@ export function closingReasonModal() {
 export function closingSoonMessage(user: User, reason?: string | null) {
     const embed = new EmbedBuilder()
         .setTitle("Closing ticket")
-        .setDescription(reason ? `Closing Ticket in 5 seconds\n\n **Reason:** ${reason}`
-        : "Closing Ticket in 5 seconds")
-        .setAuthor({name: user.username})
+        .setDescription(reason ? `Closing Ticket in 5 seconds\n\n **Closer:** <@${user.id}>\n **Reason:** ${reason}`
+        : `Closing Ticket in 5 seconds\n\n **Closer:** <@${user.id}>`)
 
     return {
         embeds: [embed],
