@@ -1,12 +1,16 @@
 import {logger} from "../logger.js";
 import {
-    ActionRowBuilder, ButtonBuilder, ButtonStyle,
+    ActionRowBuilder,
+    ButtonBuilder,
+    ButtonStyle,
     CategoryChannel,
-    ChannelType, EmbedBuilder,
+    ChannelType,
+    EmbedBuilder,
     type GuildTextBasedChannel,
     type Interaction,
     PermissionsBitField,
-    type Role, TextChannel
+    type Role,
+    TextChannel
 } from "discord.js";
 import type {Settings} from "../../db/model/settings.js";
 import {checkGuild, isValidURL} from "../checks.js";
@@ -36,29 +40,70 @@ export async function openTicket(
         const ticketsByUser = await tickets.findAll({where: {openerId: interaction.user.id}});
         if (ticketsByUser.length >= maxTicketsPerUser && maxTicketsPerUser != 0) throw new AppError("TICKET_LIMIT_REACHED")
 
-        const category = interaction.guild.channels.cache.get(guildSettings.categoryId)
-            || await interaction.guild.channels.fetch(guildSettings.categoryId);
+        const dbCategory = interaction.guild.channels.cache.get(guildSettings.categoryId)
+            || await interaction.guild.channels.fetch(guildSettings.categoryId).catch(() => null);
         const staffRole = interaction.guild.roles.cache.get(guildSettings.staffRoleId)
-            || await interaction.guild.roles.fetch(guildSettings.staffRoleId);
+            || await interaction.guild.roles.fetch(guildSettings.staffRoleId).catch(() => null);
         const logChannel = interaction.guild.channels.cache.get(guildSettings.logChannelId)
-            || await interaction.guild.channels.fetch(guildSettings.logChannelId);
+            || await interaction.guild.channels.fetch(guildSettings.logChannelId).catch(() => null);
 
         const missing: string[] = [];
-        if (!category || !(category instanceof CategoryChannel)) missing.push("Category Configuration");
+        if (!dbCategory || !(dbCategory instanceof CategoryChannel)) missing.push("Category Configuration");
         if (!staffRole) missing.push("Staff Role");
 
         if (missing.length > 0) {
             throw new AppError("MISSING_CONFIG", "Missing following Values: " + missing.join(", "));
         }
 
-        const validCategory = category as CategoryChannel;
+        const validCategory = dbCategory as CategoryChannel;
         const validStaffRole = staffRole as Role;
 
-        if (validCategory.children.cache.size >= 50) throw new AppError("TICKET_CATEGORY_FULL")
+        let category: CategoryChannel | undefined;
+        if (validCategory.guild.channels.cache.size >= 500) throw new AppError("TICKET_CATEGORY_FULL")
+        if (validCategory.children.cache.size >= 50) {
+            if (!guildSettings.overflowCategoryAllowed) throw new AppError("TICKET_CATEGORY_FULL");
+
+            let dbNeedsUpdate = false;
+
+            for (const id of guildSettings.overflowCategories) {
+                const cat = interaction.guild.channels.cache.get(id)
+                    || await interaction.guild.channels.fetch(id).catch(() => null);
+
+                if (!cat || !(cat instanceof CategoryChannel)) {
+                    guildSettings.overflowCategories = guildSettings.overflowCategories.filter(catId => catId !== id);
+                    dbNeedsUpdate = true;
+                    continue;
+                }
+                if (cat.children.cache.size >= 50) continue;
+                category = cat;
+                break;
+            }
+            if (!category) {
+                const nextIndex = guildSettings.overflowCategories.length + 1;
+                try {
+                    category = await interaction.guild.channels.create({
+                        name: `${validCategory.name} [${nextIndex}]`,
+                        type: ChannelType.GuildCategory,
+                        permissionOverwrites: validCategory.permissionOverwrites.cache,
+                        reason: "Ticket category full - overflow",
+                    });
+                } catch (e) {
+                    logger.error(`Overflow creation error: ${e}`);
+                    throw new AppError("TICKET_CATEGORY_FULL")
+                }
+
+                guildSettings.overflowCategories = [...guildSettings.overflowCategories, category.id];
+                dbNeedsUpdate = true;
+            }
+            if (dbNeedsUpdate) await guildSettings.save()
+        } else {
+            category = validCategory;
+        }
+        if (!category) throw new AppError("TICKET_CATEGORY_FULL")
 
         let ticketChannel: GuildTextBasedChannel
         try {
-            ticketChannel = await validCategory.children.create({
+            ticketChannel = await category.children.create({
                 name: `ticket-${username}`,
                 type: ChannelType.GuildText,
                 reason: `${username} - Ticket Opening`,
